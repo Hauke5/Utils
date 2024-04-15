@@ -1,6 +1,5 @@
 export * from './date'
 export * from './format'
 export * from './log'
-export * from './state'
 export * from './strings'
 export * from './timing'
