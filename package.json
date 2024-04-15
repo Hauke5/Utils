@@ -7,8 +7,11 @@
       "email": "helpfulscripts@gmail.com"
    },
    "bin": {
-      "utils": "index.sh"
+      "utils": "./dist/index.sh"
    },
+   "files": [
+      "dist"
+   ],
    "license": "MIT",
    "repository": {
       "type": "git",
