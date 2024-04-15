@@ -74,7 +74,7 @@ type MsgOptions = {
  * - a formatted date prefix for each message
  * - colored output for different logLevels
  * - transient outputs that don't add a line feed and will be overwritten by the next log statement
- * - ability to limit the line length
+ * - ability to set a maximum number of characters per line. Messages will be shortend in the middle to accommodate.
  */
 export function Log(prefix:string, options:Partial<LogOptions> = {}) {
    const logConfig:LogSettings = Object.assign({

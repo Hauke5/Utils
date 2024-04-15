@@ -8,7 +8,7 @@ export type Delay = Promise<number> & {
 
 /**
  * ## delay
- * Calls the optional callback `fn` and resolves after at least `ms` milliseconds. 
+ * Returns a `Promise` that resolves after `ms` milliseconds.
  * Calling `delay.restart()` while the delay is unresolved will reset the internal timer
  * such that the initial call to `delay()` will resolve at least `ms` milliseconds after calling `restart`.
  * Calling `delay.cancel()` will cause the initial `delay()` call to resolve immediately.
@@ -302,7 +302,7 @@ type Throttle<T extends any[]> = {
    inProgress: () => number
 }
 /**
- * Provides a throttling function that ensures 
+ * Returns a throttling function that ensures 
  * - actions are not called with less than `pace` ms between calls
  * - no more than `maxConcurrent` (default:1) actions are in progress at any time
  * @returns a throttle function to queue up new calls. This function takes
