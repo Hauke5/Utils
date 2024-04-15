@@ -1,6 +1,6 @@
 {
    "name": "@hauke5/utils",
-   "version": "1.0.0",
+   "version": "1.0.1",
    "description": "Utility functions for @hauke5 NextJS packages",
    "author": {
       "name": "hauke5",
