@@ -1,4 +1,3 @@
-import { useRef } from 'react';
 import { Log }  from './log'; const log = Log('timing');
 
 
@@ -69,7 +68,7 @@ export type AlarmPeriod = 'day' | 'hour' | 'minute' | 'second'
 
 /**
  * sets an alarm `at` the specifed datetime, at which `action` is executed.
- * if `each` is set, the alarm will repeat every such interval.
+ * if `each` is set in the options, the alarm will repeat every such interval.
  * The function returns an `Alarm` object with a `cancel` method that will end the timer.
  */
 export function alarm(at:Date, options:{each?:AlarmPeriod}, action:()=>void):Alarm {
