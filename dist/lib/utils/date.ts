@@ -12,6 +12,7 @@ const Days   = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'
 
 
 /**
+* Formats Dates according to a formatting template
 * ## Example:
 * # Date formatting support. 
 * Formats are specified in a printf-style format string. 

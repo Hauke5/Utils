@@ -1,5 +1,6 @@
 # Utils
 Framework agnostic utility functions for @hauke5 packages.
+Zero dependency, designed to work in both client/browser and node server environments.
 
 ## Installation
 `npx @hauke5/utils@latest`
@@ -11,6 +12,8 @@ Extends the `console.log` output with
 - colored output for different logLevels
 - transient outputs that don't add a line feed and will be overwritten by the next log statement
 - ability to set a maximum number of characters per line. Messages will be shortend in the middle to accommodate.
+
+
 
 ### date
 - `date`: Formats Dates according to a formatting template

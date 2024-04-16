@@ -126,7 +126,7 @@ export function Log(prefix:string, options:Partial<LogOptions> = {}) {
    /**
     * reports an informational message to the log. 
     * The message will actually be reported to the log only if the current 
-    * reporting level is INFO or lower.
+    * reporting level is INFO or lower.}
     * @param msgs a list of message to report. The following types are supported:
     * - `string` - `'...'`: prints the string
     * - `function` - `() => '...'`: if the message level is above the threshold level, calls the function 
@@ -176,16 +176,15 @@ export function Log(prefix:string, options:Partial<LogOptions> = {}) {
 
       function processMsg(msg:any):string {
          if (msg===undefined) return ''
-         const padLength = lastOutputLength
          let line = '';
 
          // if `msg` is an `Error`-like object:
          if (msg.message) line += processMsg(msg.message);
-         if (msg.stack) line = `${line.padEnd(padLength, logConfig.padChar)}\n${msg.stack}`
+         if (msg.stack) line = `${line.padEnd(lastOutputLength, logConfig.padChar)}\n${msg.stack}`
 
          switch(typeof msg) {
             case 'function':  return processMsg(msg());
-            case 'string':    line = msg.padEnd(padLength, logConfig.padChar); break;
+            case 'string':    line = msg.padEnd(lastOutputLength, logConfig.padChar); break;
             case 'object':    
             default:          ioChannels[lvl](msg)
          }
@@ -194,9 +193,10 @@ export function Log(prefix:string, options:Partial<LogOptions> = {}) {
          if (logConfig.maxLength>0) {
             options.length = Math.min(-1,-logConfig.maxLength + rawPrefix.length)
          }
-         if (lastOutputLength>0)    {
-            options.length = Math.max(1, lastOutputLength - rawPrefix.length)
-         }
+         // if (lastOutputLength>0)    {
+         //    options.length = Math.max(1, lastOutputLength)
+         //    console.log(`last=${lastOutputLength} -> len=${options.length}`)
+         // }
          options.color = logConfig[lvl]
          const final = formatOutput(options, rawPrefix, line, logConfig.padChar)
          lastOutputLength = 0
