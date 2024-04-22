@@ -1,9 +1,9 @@
 # Utils
-Framework agnostic utility functions for @hauke5 packages.
+Framework agnostic utility functions for use with @hauke5 packages.
 Zero dependency, designed to work in both client/browser and node server environments.
 
 ## Installation
-`npx @hauke5/utils@latest`
+`npm i @hauke5/utils@latest`
 
 ## Overview
 ### log
