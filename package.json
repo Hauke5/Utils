@@ -6,9 +6,6 @@
       "name": "hauke5",
       "email": "helpfulscripts@gmail.com"
    },
-   "bin": {
-      "utils": "./dist/index.sh"
-   },
    "files": [
       "dist"
    ],
