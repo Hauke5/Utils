@@ -34,11 +34,12 @@ const Days   = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'
 * @param [date=new Date()] the date to format.
 * @returns a copy of `formatString` where all supported patterns are replaced by the respective values from `date`.
 */
-export function date(formatString:string, date=new Date()):string {
+export function formatDate(formatString:string, date=new Date()):string {
    const result = formatString.replaceAll(/%(Y+|M+|D+|h+|m+|s+|j+)/g, (match, p1, offset, string, groups) => {
       switch(p1) {
          case 'YYYY':   return `${date.getFullYear()}`
-         case 'YY':     return `${date.getFullYear()%100}`
+         case 'YY':     
+         case 'Y':      return `${date.getFullYear()%100}`
          case 'MMMM':   return `${Months[date.getMonth()]}`
          case 'MMM':    return `${Months[date.getMonth()].slice(0,3)}`
          case 'MM':     return `${date.getMonth()+1}`.padStart(2, '0')
@@ -89,4 +90,30 @@ export function isLastBusinessDayOfMonth(date:Date, holidays:string[]) {
 
 export function shortDateString(d:Date) {
    return d.toLocaleDateString(undefined, {dateStyle:'short'})
+}
+
+
+const dateFmt = '%M/%D/%YY %h:%m'
+
+/**
+ * converts a date into a text string that reflects the relative amount of time passed for `date`.
+ * @param date 
+ * @returns
+ * - `dateString` the relative date string
+ * - `refresh` the suggested number of seconds for a refresh of the text.
+ */
+export function dateToRelative(date:Date) {
+   const sec = 1
+   const min = 60
+   const hour = 60*min
+   const diff = (Date.now() - date?.getTime?.()??0)/1000
+   if (diff<3*sec)      return {dateString:'just now',                        refresh:10*sec}
+   if (diff<30*sec)     return {dateString:'a few seconds ago',               refresh:10*sec}
+   if (diff<1*min)      return {dateString:'less than a minute ago',          refresh:30*sec}
+   if (diff<2*min)      return {dateString:'a minute ago',                    refresh:1*min}
+   if (diff<5*min)      return {dateString:'a few minutes ago',               refresh:1*min}
+   if (diff<1*hour)     return {dateString:`${Math.round(diff/60)}' ago`,     refresh:1*min}
+   if (diff<24*hour)    return {dateString:`${Math.round(diff/3600)}h ago`,   refresh:1*hour}
+   // else: show absolute date
+   return                      {dateString:formatDate(dateFmt, date),         refresh:1*hour}
 }

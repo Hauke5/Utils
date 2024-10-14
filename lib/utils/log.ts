@@ -1,4 +1,4 @@
-import { date }         from './date';
+import { formatDate }   from './date';
 import { adjustLength } from './strings'
 
 
@@ -94,12 +94,11 @@ export function Log(prefix:string, options:Partial<LogOptions> = {}) {
    }
 
    const log = info;
-   return Object.assign(log, log, {
+   return Object.assign(log, {
       DEBUG:LogLevel.DEBUG, INFO:LogLevel.INFO, WARN:LogLevel.WARN, ERROR: LogLevel.ERROR,
       debug, info, transient, warn, error,
       config
    })
-
 
    /**
     * reports an debug message to the log. 
@@ -118,9 +117,8 @@ export function Log(prefix:string, options:Partial<LogOptions> = {}) {
     * @return the message printed
     */
    function transient(msg:string):string { 
-      lastOutputLength = 0
       const result = out(LogLevel.INFO, [msg], {lf:'\r' }); 
-      lastOutputLength = out.length
+      lastOutputLength = result.trim().length
       return result
    }
    /**
@@ -169,7 +167,7 @@ export function Log(prefix:string, options:Partial<LogOptions> = {}) {
    function out(lvl:LogLevel, msg:any[], options:MsgOptions):string {	
       if (levelImportance[lvl] < levelImportance[logConfig.level]) return ''
 
-      const dateStr = date(logConfig.dateFormat ?? '');
+      const dateStr = formatDate(logConfig.dateFormat ?? '');
       return (msg instanceof Array) 
          ? msg.map(m => processMsg(m)).join('')
          : processMsg(msg)
@@ -193,10 +191,6 @@ export function Log(prefix:string, options:Partial<LogOptions> = {}) {
          if (logConfig.maxLength>0) {
             options.length = Math.min(-1,-logConfig.maxLength + rawPrefix.length)
          }
-         // if (lastOutputLength>0)    {
-         //    options.length = Math.max(1, lastOutputLength)
-         //    console.log(`last=${lastOutputLength} -> len=${options.length}`)
-         // }
          options.color = logConfig[lvl]
          const final = formatOutput(options, rawPrefix, line, logConfig.padChar)
          lastOutputLength = 0
@@ -235,10 +229,9 @@ export function Log(prefix:string, options:Partial<LogOptions> = {}) {
 function formatOutput(options:MsgOptions, rawPrefix:string, line:string, padChar:string=' '):string[] {
    const colors = colorsByEnvironment()
    const color = options.color ?? []
-   const len = options.length ?? 0
    const lines = line
       .split('\n')
-      .map(line => adjustLength(line, len, padChar))
+      .map(line => adjustLength(line, options.length ?? 0, padChar))
       .join('\n')
    const prefixColor = color?.map((_c:string) => colors[_c as keyof typeof colors]).join(' ');
    const clearColor  = colors['clear']
@@ -250,6 +243,10 @@ function formatOutput(options:MsgOptions, rawPrefix:string, line:string, padChar
    }
 }
 
+Log.DEBUG   = LogLevel.DEBUG
+Log.INFO    = LogLevel.INFO
+Log.ERROR   = LogLevel.ERROR
+Log.WARN    = LogLevel.WARN
 
 
 

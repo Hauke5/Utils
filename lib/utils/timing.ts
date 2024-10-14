@@ -403,29 +403,40 @@ interface Request <T extends any[]>{
  * - an `action` to call at the end of the debounc period
  * - a set of arguments (`...args`) to pass to the `action` upon execution
  */
-export function getDebouncer<T extends any[]>() {
-   const requests:{[key:string]:Request<T>} = {}
-   const debounce = (key:string, periodMS:number, action:(...args:T)=>void, ...args:T) => {
+export function getDebouncer() {
+   const requests:{[key:string]:Request<any>} = {}
+   const debounce = <T extends any[]>(key:string, periodMS:number, action:(...args:T)=>void, ...args:T) => {
       // clear any prior pending saveRequest
-      if (requests[key])
+      if (requests[key]) {
+         log.debug(()=>`recreating ${key}...`)
          clearTimeout(requests[key].timer)
+      } else
+         log.debug(()=>`creating ${key}...`)
 
       // overwrite any previous save request with the current content 
       requests[key] = {
          args, action,
          timer: setTimeout(()=>executeAction(key), periodMS)
       }
-
-      // called when timer expires:
-      async function executeAction(key:string) {
-         log.debug(()=>`executing ${key}...`)
-         const request = requests[key]
-         request.action(...request.args)
+   }
+   debounce.cancel = (key:string, withActionCall=false) => {
+      if (requests[key]?.timer) {
+         log.info(()=>`canceling ${key}${withActionCall?' with action':''}...`)
+         clearTimeout(requests[key].timer)
+         if (withActionCall) executeAction(key)
+         if (requests[key]) delete requests[key]
       }
    }
-   debounce.cancel = (key:string) => requests[key]?.timer
-      ? clearTimeout(requests[key].timer) 
-      : null
+   debounce.pending = (key:string) => requests[key]?.timer? true : false
    return debounce  
+
+   // called when timer expires:
+   async function executeAction(key:string) {
+      if (requests[key]) {
+         log.debug(()=>`executing ${key}${requests[key]?'':' (not found)'}...`)
+         requests[key].action(...requests[key].args)
+         delete requests[key]
+      }
+   }
 }
 
