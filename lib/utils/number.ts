@@ -1,5 +1,3 @@
-import { currencies } from "@/app/(apps)/banking/support/db/dbUtils"
-
 
 export type FormatOptions = Intl.NumberFormatOptions
 
