@@ -106,7 +106,7 @@ export function dateToRelative(date:Date) {
    const sec = 1
    const min = 60
    const hour = 60*min
-   const diff = (Date.now() - date?.getTime?.()??0)/1000
+   const diff = (Date.now() - date.getTime?.())/1000
    if (diff<3*sec)      return {dateString:'just now',                        refresh:10*sec}
    if (diff<30*sec)     return {dateString:'a few seconds ago',               refresh:10*sec}
    if (diff<1*min)      return {dateString:'less than a minute ago',          refresh:30*sec}
