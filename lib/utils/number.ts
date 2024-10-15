@@ -6,15 +6,6 @@ export function formatNumber(options:FormatOptions) {
    return (value:number):string  => format(value)
 }
 
-export function formatUSD() {
-   const options:FormatOptions = {
-      style:      'currency',
-      currency:   'USD',
-      currencyDisplay:  'narrowSymbol'
-   }
-   return formatNumber(options)
-}
-
 export function formatDecimal(options:FormatOptions) {
    const format = formatNumber(Object.assign({
       style:            'decimal',
